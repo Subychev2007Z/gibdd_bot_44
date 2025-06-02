@@ -5,6 +5,10 @@ from aiogram.types import Message
 from database.models import User, UserRole
 from filters.admin import IsAdmin
 from filters.inspector import IsInspector
+from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup
+from aiogram.types import CallbackQuery
+from keyboards.admin import get_kb_by_show_employees
 
 router = Router()
 
@@ -56,6 +60,10 @@ async def show_admins(message: Message):
         else:
             admin_entry = f"{index}. {full_name}"
         admins_list += admin_entry + "\n"
+    keyboard = get_kb_by_show_employees(admin, 1, 10)
     await message.answer(
-        admins_list, parse_mode="HTML", disable_web_page_preview=True
+        "Список админов:",
+        reply_markup=keyboard
     )
+
+    await CallbackQuery.answer(f"Вы нажали {CallbackQuery.data}")
